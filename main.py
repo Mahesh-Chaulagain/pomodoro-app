@@ -11,8 +11,22 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
+timer = None
 
 # ---------------------------- TIMER RESET ------------------------------- # 
+
+
+def reset_timer():
+    global timer
+    window.after_cancel(timer)     # stops the timer
+    # time_text 00:00
+    canvas.itemconfig(timer_text, text="00:00")
+    # title_label "Timer"
+    timer_label.config(text="Timer")
+    # reset check_marks
+    check_mark.config(text="")
+    global reps
+    reps = 0
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
@@ -28,10 +42,12 @@ def start_timer():
     if reps % 8 == 0:
         count_down(long_break_sec)
         timer_label.config(text="Break", fg=RED)
+
     # If it's 2nd/4th/6th rep:
     elif reps % 2 == 0:
         count_down(short_break_sec)
         timer_label.config(text="Break", fg=PINK)
+
     else:
         # If it's the 1st/3rd/5th/7th rep:
         count_down(work_sec)  # countdown for work_sec
@@ -51,11 +67,19 @@ def count_down(count):
 
     canvas.itemconfig(timer_text, text=f"{count_minute}:{count_sec}")   # change the text in the canvas
     if count > 0:
-        window.after(1000, count_down, count - 1)
+        global timer
+        timer = window.after(1000, count_down, count - 1)
+
     else:
         start_timer()
+        marks = ""
+        work_sessions = math.floor(reps/2)
+        for _ in range(work_sessions):
+            marks += "✔"
+        check_mark.config(text=marks)
 
 # ---------------------------- UI SETUP ------------------------------- #
+
 
 window = Tk()
 window.title("Pomodoro")
@@ -81,11 +105,11 @@ start_button = Button(text="Start", highlightthickness=0, command=start_timer)
 start_button.grid(column=0, row=2)
 
 # Reset button
-reset_button = Button(text="Reset", highlightthickness=0)
+reset_button = Button(text="Reset", highlightthickness=0, command=reset_timer)
 reset_button.grid(column=2, row=2)
 
 # Check mark
-check_mark = Label(text="✔", fg=GREEN, bg=YELLOW)
+check_mark = Label(fg=GREEN, bg=YELLOW)
 check_mark.grid(column=1, row=3)
 
 window.mainloop()
