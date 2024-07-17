@@ -1,5 +1,6 @@
 from tkinter import *
 import math
+from plyer import notification
 
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
@@ -41,16 +42,31 @@ def start_timer():
     # If it's the 8th rep:
     if reps % 8 == 0:
         count_down(long_break_sec)
+        notification.notify(
+            title='Hello',
+            message='Long Break! Chill for 20 minutes',
+            app_name='python'
+        )
         timer_label.config(text="Break", fg=RED)
 
     # If it's 2nd/4th/6th rep:
     elif reps % 2 == 0:
         count_down(short_break_sec)
+        notification.notify(
+            title='Hello',
+            message='Break Time! Relax for 5 minutes',
+            app_name='python'
+        )
         timer_label.config(text="Break", fg=PINK)
 
     else:
         # If it's the 1st/3rd/5th/7th rep:
         count_down(work_sec)  # countdown for work_sec
+        notification.notify(
+            title='Hello',
+            message='Start your work! Work for 25 minutes',
+            app_name='python'
+        )
         timer_label.config(text="Work", fg=GREEN)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
@@ -94,7 +110,6 @@ canvas.create_image(100, 112, image=tomato_img)
 # Display text in the canvas picture [arguments:x-value,y-value,text]
 timer_text = canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
 canvas.grid(column=1, row=1)
-
 
 # Timer label
 timer_label = Label(text="Timer", font=(FONT_NAME, 60), fg=GREEN, bg=YELLOW)
